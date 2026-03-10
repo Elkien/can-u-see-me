@@ -100,9 +100,41 @@ export class GraphPanel {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0d1117; overflow: hidden; }
     #cy { width: 100vw; height: 100vh; }
+    #search-panel {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #search-input {
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 6px 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      border-radius: 4px;
+      outline: none;
+      width: 260px;
+    }
+    #search-input:focus { border-color: #58a6ff; }
+    #search-input::placeholder { color: #484f58; }
+    #search-count {
+      color: #8b949e;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      min-width: 90px;
+    }
   </style>
 </head>
 <body>
+  <div id="search-panel">
+    <input id="search-input" type="text" placeholder="Search file…" autocomplete="off" spellcheck="false" />
+    <span id="search-count"></span>
+  </div>
   <div id="cy"></div>
   <script src="${scriptUri}"></script>
 </body>
