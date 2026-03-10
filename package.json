@@ -1,0 +1,41 @@
+{
+  "name": "can-u-see-me",
+  "displayName": "Can U See Me",
+  "description": "Dependency graph visualizer for your codebase",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "canUSeeMe.openGraph",
+        "title": "Can U See Me: Open Dependency Graph"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && npm run bundle-webview",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "bundle-webview": "esbuild src/webview/index.ts --bundle --outfile=media/webview.js --minify --platform=browser",
+    "bundle-webview:watch": "esbuild src/webview/index.ts --bundle --outfile=media/webview.js --platform=browser --watch"
+  },
+  "devDependencies": {
+    "@types/cytoscape": "^3.21.9",
+    "@types/cytoscape-dagre": "^2.3.4",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.27.3",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "cytoscape": "^3.33.1",
+    "cytoscape-dagre": "^2.5.0"
+  }
+}
