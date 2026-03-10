@@ -81,7 +81,7 @@ function initGraph(container: HTMLElement) {
       },
     ],
     layout: { name: 'preset' },
-    wheelSensitivity: 0.3,
+    wheelSensitivity: 1,
   });
 
   cy.on('tap', 'node', (evt) => {
@@ -144,22 +144,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('cy');
   if (!container) return;
   initGraph(container);
-
-  // Dati mock per verifica visiva
-  loadGraph({
-    nodes: [
-      { id: 'extension', label: 'extension.ts' },
-      { id: 'graphPanel', label: 'GraphPanel.ts' },
-      { id: 'scanner', label: 'scanner.ts' },
-      { id: 'parser', label: 'parser.ts' },
-      { id: 'types', label: 'types.ts' },
-    ],
-    edges: [
-      { source: 'extension', target: 'graphPanel' },
-      { source: 'extension', target: 'scanner' },
-      { source: 'graphPanel', target: 'types' },
-      { source: 'scanner', target: 'parser' },
-      { source: 'parser', target: 'types' },
-    ],
-  });
+  vscode.postMessage({ type: 'ready' });
 });

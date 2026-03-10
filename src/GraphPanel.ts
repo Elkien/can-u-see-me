@@ -1,12 +1,14 @@
 import * as vscode from 'vscode';
+import { scanWorkspace } from './scanner';
 
 export class GraphPanel {
   public static currentPanel: GraphPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private readonly _extensionUri: vscode.Uri;
+  private readonly _workspacePath: string;
   private _disposables: vscode.Disposable[] = [];
 
-  public static createOrShow(extensionUri: vscode.Uri) {
+  public static createOrShow(extensionUri: vscode.Uri, workspacePath: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined;
@@ -27,12 +29,13 @@ export class GraphPanel {
       }
     );
 
-    GraphPanel.currentPanel = new GraphPanel(panel, extensionUri);
+    GraphPanel.currentPanel = new GraphPanel(panel, extensionUri, workspacePath);
   }
 
-  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, workspacePath: string) {
     this._panel = panel;
     this._extensionUri = extensionUri;
+    this._workspacePath = workspacePath;
     this._panel.webview.html = this._getHtml();
 
     this._panel.webview.onDidReceiveMessage(
@@ -46,13 +49,29 @@ export class GraphPanel {
 
   private _handleMessage(message: { type: string; id?: string }) {
     switch (message.type) {
+      case 'ready':
+        this._runScan();
+        break;
       case 'nodeSelected':
-        // In futuro: aprire il file corrispondente
         vscode.window.setStatusBarMessage(`Selected: ${message.id}`, 3000);
         break;
       case 'selectionCleared':
         break;
     }
+  }
+
+  private _runScan() {
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: 'Can U See Me: Scanning workspace…',
+        cancellable: false,
+      },
+      async () => {
+        const graphData = scanWorkspace(this._workspacePath);
+        this._panel.webview.postMessage({ type: 'loadGraph', data: graphData });
+      }
+    );
   }
 
   public dispose() {
