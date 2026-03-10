@@ -55,6 +55,14 @@ export class GraphPanel {
       case 'nodeSelected':
         vscode.window.setStatusBarMessage(`Selected: ${message.id}`, 3000);
         break;
+      case 'nodeOpenFile':
+        if (message.id) {
+          const uri = vscode.Uri.file(message.id);
+          vscode.workspace.openTextDocument(uri).then(doc =>
+            vscode.window.showTextDocument(doc, { preview: false })
+          );
+        }
+        break;
       case 'selectionCleared':
         break;
     }

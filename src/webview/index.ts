@@ -98,6 +98,10 @@ function initGraph(container: HTMLElement) {
     vscode.postMessage({ type: 'nodeSelected', id: node.id() });
   });
 
+  cy.on('dbltap', 'node', (evt) => {
+    vscode.postMessage({ type: 'nodeOpenFile', id: evt.target.id() });
+  });
+
   cy.on('tap', (evt) => {
     if (evt.target === cy) {
       clearHighlight();
